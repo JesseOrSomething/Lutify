@@ -4,8 +4,6 @@
     --md-sys-color-on-primary: #FFFFFF;
     --md-sys-color-primary-container: #EADDFF;
     --md-sys-color-on-primary-container: #21005D;
-    --md-sys-color-secondary-container: #E8DEF8;
-    --md-sys-color-on-secondary-container: #1D192B;
     --md-sys-color-surface: #FFFBFE;
     --md-sys-color-on-surface: #1C1B1F;
     --md-sys-color-on-surface-variant: #49454F;
@@ -21,8 +19,6 @@
         --md-sys-color-on-primary: #381E72;
         --md-sys-color-primary-container: #4F378B;
         --md-sys-color-on-primary-container: #EADDFF;
-        --md-sys-color-secondary-container: #4A4458;
-        --md-sys-color-on-secondary-container: #E8DEF8;
         --md-sys-color-surface: #141218;
         --md-sys-color-on-surface: #E6E1E5;
         --md-sys-color-on-surface-variant: #CAC4D0;
@@ -47,33 +43,23 @@ body { margin: 0; font-family: var(--md-ref-typeface-brand); background-color: v
 #app { display: flex; flex-direction: column; height: 100vh; }
 .app-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background-color: var(--md-sys-color-surface); flex-shrink: 0; border-bottom: 1px solid var(--md-sys-color-surface-container-high); }
 .app-title { font-size: 22px; margin: 0; color: var(--md-sys-color-primary); }
-.main-content { padding: 16px; overflow-y: auto; flex-grow: 1; }
+.main-content { padding: 16px; overflow-y: auto; flex-grow: 1; display: flex; flex-direction: column; }
 
 /* Image Workspace */
-#image-workspace { width: 100%; margin-bottom: 24px; background-color: var(--md-sys-color-surface-container-high); border-radius: 24px; display: flex; justify-content: center; align-items: center; min-height: 250px; position: relative; overflow: hidden; }
-#canvas { max-width: 100%; max-height: 60vh; object-fit: contain; display: none; border-radius: 4px; }
+#image-workspace { width: 100%; flex-grow: 1; margin-bottom: 24px; background-color: var(--md-sys-color-surface-container-high); border-radius: 24px; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+#canvas { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
 #placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--md-sys-color-on-surface-variant); }
 .placeholder-icon { font-size: 48px; }
 
-/* Simplified Galleries */
-.gallery-container { margin-bottom: 24px; }
-.gallery-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.gallery-title { font-size: 18px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); }
-.grid-gallery { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); }
+/* --- Simplified Controls with Dropdowns --- */
+.controls-container { display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
+.control-group { display: flex; align-items: center; gap: 12px; }
+.control-label { font-size: 14px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); }
+.select-wrapper { flex-grow: 1; position: relative; }
+.control-select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--md-sys-color-outline); background-color: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); font-family: var(--md-ref-typeface-brand); font-size: 16px; appearance: none; -webkit-appearance: none; }
+.select-wrapper::after { content: 'expand_more'; font-family: 'Material Symbols Outlined'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: var(--md-sys-color-on-surface-variant); }
 
-/* Smaller Image Previews */
-.thumbnail { width: 100%; padding-top: 100%; position: relative; border-radius: 12px; overflow: hidden; border: 3px solid transparent; cursor: pointer; transition: all 0.2s; background-color: var(--md-sys-color-surface-container-high); }
-.thumbnail img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
-.thumbnail.selected { border-color: var(--md-sys-color-primary); }
-
-/* Centered LUT Text */
-.lut-chip { display: flex; align-items: center; justify-content: center; height: 64px; border-radius: 12px; background-color: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); font-weight: 500; font-size: 13px; text-align: center; cursor: pointer; border: 3px solid transparent; transition: all 0.2s; padding: 4px; }
-.lut-chip.selected { border-color: var(--md-sys-color-primary); }
-
-/* Simplified Buttons */
-.action-button { background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border: none; border-radius: 20px; padding: 8px 24px; font-family: var(--md-ref-typeface-brand); font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
-.action-button:hover { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+/* Buttons */
+.action-button { background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border: none; border-radius: 20px; padding: 10px 20px; font-family: var(--md-ref-typeface-brand); font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color 0.2s; }
 .action-button.large { padding: 12px 32px; font-size: 16px; }
-
 .icon-button { background: none; border: none; border-radius: 50%; width: 40px; height: 40px; display: none; align-items: center; justify-content: center; cursor: pointer; color: var(--md-sys-color-on-surface-variant); }
-.icon-button:hover { background-color: var(--md-sys-color-surface-container-high); }

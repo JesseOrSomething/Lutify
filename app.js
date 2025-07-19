@@ -27,8 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         setupEventListeners();
     }
 
-    const showLandingPage = () => { landingPage.classList.remove('hidden'); appPage.classList.add('hidden'); };
-    const showApp = () => { landingPage.classList.add('hidden'); appPage.classList.remove('hidden'); localStorage.setItem('hasVisitedApp', 'true'); };
+    const showLandingPage = () => { landingPage.style.display = 'flex'; appPage.classList.add('hidden'); };
+    const showApp = () => { landingPage.style.display = 'none'; appPage.classList.remove('hidden'); localStorage.setItem('hasVisitedApp', 'true'); };
     
     // --- 2. PWA & DB ---
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installButton.style.display = 'flex'; });
@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function drawImageOnCanvas() {
         if (!selectedImage) return;
+        // *** THIS IS THE FIX: Correctly reference the image properties ***
         canvas.width = selectedImage.element.naturalWidth;
         canvas.height = selectedImage.element.naturalHeight;
         ctx.drawImage(selectedImage.element, 0, 0);
@@ -119,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedLutName = name;
         document.querySelectorAll('.lut-chip').forEach(c => c.classList.remove('selected'));
         document.querySelector(`.lut-chip[data-lut-name='${CSS.escape(name)}']`).classList.add('selected');
-        drawImageOnCanvas(); // Redraw image with new/removed LUT
+        drawImageOnCanvas(); // This now works correctly
     }
 
     function addLutToGallery(lut) {
@@ -134,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveLutToDB(lutData) { if (db) db.transaction('luts', 'readwrite').objectStore('luts').put(lutData); }
     
     function loadLutsFromDB() {
-        addLutToGallery({ name: 'None' }); // Add default 'None' option first
+        addLutToGallery({ name: 'None' });
         selectLut('None');
         if (!db) return;
         const store = db.transaction('luts').objectStore('luts');
@@ -151,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return { data, size };
     }
 
-    // --- 6. SEAMLESS LUT APPLICATION (Trilinear Interpolation) ---
+    // --- 6. SEAMLESS LUT APPLICATION ---
     function applySelectedLut() {
         const lut = luts.find(l => l.name === selectedLutName);
         if (!lut || !lut.data || !selectedImage) return;

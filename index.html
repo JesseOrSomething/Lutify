@@ -3,20 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    
-    <!-- This tells the browser bar what color to be in light/dark mode -->
     <meta name="theme-color" content="#EADDFF" media="(prefers-color-scheme: light)">
     <meta name="theme-color" content="#21005D" media="(prefers-color-scheme: dark)">
-
     <title>PixelPerfect</title>
-    
-    <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    
-    <!-- App Stylesheet and Manifest -->
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
 </head>
@@ -31,14 +24,11 @@
             <div class="install-instructions">
                 <p><strong>How to Install:</strong></p>
                 <ol>
-                    <li>Tap the <span class="material-symbols-outlined inline-icon">more_vert</span> or <span class="material-symbols-outlined inline-icon">ios_share</span> button in your browser.</li>
+                    <li>Tap your browser's menu (<span class="material-symbols-outlined inline-icon">more_vert</span> or <span class="material-symbols-outlined inline-icon">ios_share</span>).</li>
                     <li>Select 'Add to Home Screen' or 'Install App'.</li>
                 </ol>
             </div>
-            <button id="enter-app-button" class="fab extended">
-                <span class="material-symbols-outlined">arrow_forward</span>
-                Continue to App
-            </button>
+            <button id="enter-app-button" class="action-button large">Continue to App</button>
         </div>
     </div>
 
@@ -60,28 +50,22 @@
                 </div>
             </div>
 
+            <!-- Simplified Photos Section -->
             <div class="gallery-container">
-                <div class="gallery-actions">
-                    <label for="image-upload" class="fab" title="Add Photos">
-                        <span class="material-symbols-outlined">add_a_photo</span>
-                    </label>
+                <div class="gallery-header">
                     <span class="gallery-title">Your Photos</span>
+                    <label for="image-upload" class="action-button">Add</label>
                 </div>
-                <div id="photo-gallery" class="grid-gallery">
-                    <!-- Photo thumbnails are added here by JS -->
-                </div>
+                <div id="photo-gallery" class="grid-gallery"></div>
             </div>
 
+            <!-- Simplified Filters Section -->
             <div class="gallery-container">
-                 <div class="gallery-actions">
-                    <label for="lut-upload" class="fab" title="Import LUTs">
-                        <span class="material-symbols-outlined">style</span>
-                    </label>
+                <div class="gallery-header">
                     <span class="gallery-title">Filters (LUTs)</span>
+                    <label for="lut-upload" class="action-button">Import</label>
                 </div>
-                <div id="lut-gallery" class="grid-gallery">
-                    <!-- LUT chips are added here by JS -->
-                </div>
+                <div id="lut-gallery" class="grid-gallery"></div>
             </div>
         </main>
 

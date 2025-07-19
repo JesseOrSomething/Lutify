@@ -16,13 +16,13 @@
 <body>
 
     <!-- Landing Page for First-Time Users -->
-    <div id="landing-page">
+    <div id="landing-page" class="hidden">
         <div class="landing-content">
             <span class="material-symbols-outlined landing-icon">auto_awesome</span>
             <h1>Welcome to PixelPerfect</h1>
             <p>A high-performance photo filter app.</p>
             <div class="install-instructions">
-                <p><strong>To Install:</strong> Tap <span class="material-symbols-outlined inline-icon">more_vert</span> then 'Install App' for the best experience.</p>
+                <p><strong>To Install:</strong> Tap <span class="material-symbols-outlined inline-icon">more_vert</span> then 'Install App' for a fullscreen experience.</p>
             </div>
             <button id="enter-app-button" class="action-button large">Continue to App</button>
         </div>
@@ -31,7 +31,7 @@
     <!-- Main App Interface -->
     <div id="app" class="hidden">
         <header class="app-bar">
-            <!-- The H1 now has an ID -->
+            <!-- This title text will change based on launch mode -->
             <h1 id="app-title-text" class="app-title">PixelPerfect</h1>
             <button id="install-button-main" class="icon-button-header" title="Install App">
                 <span class="material-symbols-outlined">download_for_offline</span>

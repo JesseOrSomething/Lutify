@@ -1,5 +1,5 @@
 :root {
-    /* Material You Color Palette */
+    /* --- Light Theme (Default) --- */
     --md-sys-color-primary: #6750A4;
     --md-sys-color-on-primary: #FFFFFF;
     --md-sys-color-primary-container: #EADDFF;
@@ -9,8 +9,26 @@
     --md-sys-color-surface: #FFFBFE;
     --md-sys-color-on-surface: #1C1B1F;
     --md-sys-color-on-surface-variant: #49454F;
+    --md-sys-color-surface-container-high: #ECE6F0;
     --md-sys-color-outline: #79747E;
     --md-ref-typeface-brand: 'Google Sans', 'Roboto', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* --- Dark Theme --- */
+        --md-sys-color-primary: #D0BCFF;
+        --md-sys-color-on-primary: #381E72;
+        --md-sys-color-primary-container: #4F378B;
+        --md-sys-color-on-primary-container: #EADDFF;
+        --md-sys-color-secondary-container: #4A4458;
+        --md-sys-color-on-secondary-container: #E8DEF8;
+        --md-sys-color-surface: #141218;
+        --md-sys-color-on-surface: #E6E1E5;
+        --md-sys-color-on-surface-variant: #CAC4D0;
+        --md-sys-color-surface-container-high: #2B2930;
+        --md-sys-color-outline: #938F99;
+    }
 }
 
 body {
@@ -23,72 +41,45 @@ body {
 
 .hidden { display: none !important; }
 
-/* Landing Page Styles */
+/* Landing Page */
 #landing-page { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 24px; height: 100vh; box-sizing: border-box; }
 .landing-content { max-width: 400px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
 .landing-icon { font-size: 48px; color: var(--md-sys-color-primary); }
 .landing-content h1 { margin: 0; }
-.install-instructions { text-align: left; background-color: var(--md-sys-color-secondary-container); padding: 12px 16px; border-radius: 16px; margin: 16px 0; }
+.install-instructions { text-align: left; background-color: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); padding: 12px 16px; border-radius: 16px; margin: 16px 0; }
 .install-instructions ol { padding-left: 20px; margin: 0; }
 .inline-icon { vertical-align: bottom; font-size: 1.2em; }
 
-/* Main App Layout */
+/* App Layout */
 #app { display: flex; flex-direction: column; height: 100vh; }
 .app-bar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background-color: var(--md-sys-color-surface); flex-shrink: 0; }
 .app-title { font-size: 22px; margin: 0; color: var(--md-sys-color-primary); }
 .main-content { padding: 0 16px 16px; overflow-y: auto; flex-grow: 1; }
 
 /* Image Workspace */
-#image-workspace { width: 100%; margin-bottom: 24px; background-color: #ECEFF1; border-radius: 24px; display: flex; justify-content: center; align-items: center; min-height: 300px; position: relative; overflow: hidden; }
-#canvas { max-width: 100%; max-height: 60vh; object-fit: contain; display: none; }
+#image-workspace { width: 100%; margin-bottom: 24px; background-color: var(--md-sys-color-surface-container-high); border-radius: 24px; display: flex; justify-content: center; align-items: center; min-height: 300px; position: relative; overflow: hidden; }
+#canvas { max-width: 100%; max-height: 60vh; object-fit: contain; display: none; border-radius: 4px; }
 #placeholder { display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--md-sys-color-on-surface-variant); }
 .placeholder-icon { font-size: 48px; }
 
-/* --- NEW: Grid Gallery for Photos and LUTs --- */
+/* Grid Galleries */
 .gallery-container { margin-bottom: 24px; }
 .gallery-actions { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
 .gallery-title { font-size: 16px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); }
-.grid-gallery {
-    display: grid;
-    gap: 12px;
-    /* Create a responsive grid: auto-fit columns that are at least 80px wide */
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-}
+.grid-gallery { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
 
-/* Thumbnails and LUT Chips */
-.thumbnail, .lut-chip { cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease-in-out; text-align: center; }
-
-.thumbnail {
-    width: 100%;
-    padding-top: 100%; /* 1:1 Aspect ratio */
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-}
-.thumbnail img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+/* Thumbnails & LUTs */
+.thumbnail { width: 100%; padding-top: 100%; position: relative; border-radius: 16px; overflow: hidden; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+.thumbnail img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
 .thumbnail.selected { border-color: var(--md-sys-color-primary); transform: scale(1.05); }
 
-.lut-chip {
-    padding: 10px 8px; /* Adjusted padding for grid */
-    border-radius: 12px;
-    background-color: var(--md-sys-color-secondary-container);
-    color: var(--md-sys-color-on-secondary-container);
-    font-weight: 500;
-    font-size: 14px;
-    word-break: break-word;
-}
-.lut-chip.selected { background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+.lut-chip { padding: 10px 8px; border-radius: 12px; background-color: var(--md-sys-color-secondary-container); color: var(--md-sys-color-on-secondary-container); font-weight: 500; font-size: 13px; word-break: break-word; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+.lut-chip.selected { border-color: var(--md-sys-color-primary); background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); }
 
-/* Material You Components */
+/* Buttons */
 .fab { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; background-color: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); border-radius: 16px; border: none; cursor: pointer; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: box-shadow 0.2s; }
 .fab:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
 .fab.extended { width: auto; padding: 0 20px; gap: 12px; height: 56px; font-size: 16px; background-color: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary); }
+
 .icon-button { background: none; border: none; border-radius: 50%; width: 40px; height: 40px; display: none; align-items: center; justify-content: center; cursor: pointer; color: var(--md-sys-color-on-surface-variant); }
-.icon-button:hover { background-color: rgba(0,0,0,0.05); }
+.icon-button:hover { background-color: var(--md-sys-color-surface-container-high); }

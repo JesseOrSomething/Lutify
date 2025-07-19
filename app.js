@@ -14,71 +14,49 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // App State
     let db;
-    let images = []; // Stores { id, name, element }
-    let luts = [];   // Stores { name, data, size }
+    let images = [];
+    let luts = [];
     let selectedImage = null;
     let selectedLutName = 'None';
     let deferredPrompt;
 
+    // --- 1. INITIALIZATION ---
     function init() {
-        if (localStorage.getItem('hasVisitedApp')) {
-            showApp();
-        } else {
-            showLandingPage();
-        }
+        if (localStorage.getItem('hasVisitedApp')) showApp(); else showLandingPage();
         initDB();
         setupEventListeners();
     }
 
-    function showLandingPage() {
-        landingPage.classList.remove('hidden');
-        appPage.classList.add('hidden');
-    }
-
-    function showApp() {
-        landingPage.classList.add('hidden');
-        appPage.classList.remove('hidden');
-        localStorage.setItem('hasVisitedApp', 'true');
-    }
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installButton.style.display = 'flex';
-    });
-
+    const showLandingPage = () => { landingPage.classList.remove('hidden'); appPage.classList.add('hidden'); };
+    const showApp = () => { landingPage.classList.add('hidden'); appPage.classList.remove('hidden'); localStorage.setItem('hasVisitedApp', 'true'); };
+    
+    // --- 2. PWA & DB ---
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installButton.style.display = 'flex'; });
+    
     function initDB() {
-        const request = indexedDB.open('PixelPerfectDB', 2); // Version 2 for new data structure
-        request.onupgradeneeded = e => {
-            db = e.target.result;
-            if (!db.objectStoreNames.contains('luts')) {
-                db.createObjectStore('luts', { keyPath: 'name' });
-            }
-        };
+        const request = indexedDB.open('PixelPerfectDB', 2);
+        request.onupgradeneeded = e => { db = e.target.result; if (!db.objectStoreNames.contains('luts')) db.createObjectStore('luts', { keyPath: 'name' }); };
         request.onsuccess = e => { db = e.target.result; loadLutsFromDB(); };
         request.onerror = e => console.error('Database error:', e.target.errorCode);
     }
-
+    
+    // --- 3. EVENT LISTENERS ---
     function setupEventListeners() {
-        installButton.addEventListener('click', () => {
-            if(deferredPrompt) deferredPrompt.prompt();
-        });
+        installButton.addEventListener('click', () => { if (deferredPrompt) deferredPrompt.prompt(); });
         enterAppButton.addEventListener('click', showApp);
         imageUpload.addEventListener('change', handleImageUpload);
         lutUpload.addEventListener('change', handleLutUpload);
     }
 
+    // --- 4. IMAGE HANDLING ---
     function handleImageUpload(e) {
-        if (e.target.files.length > 0) {
-            placeholder.style.display = 'none';
-            canvas.style.display = 'block';
-        }
+        if (e.target.files.length > 0) { placeholder.style.display = 'none'; canvas.style.display = 'block'; }
         for (const file of e.target.files) {
             const reader = new FileReader();
             reader.onload = (event) => {
                 const img = new Image();
                 img.onload = () => {
-                    const imageData = { id: Date.now() + file.name, name: file.name, element: img };
+                    const imageData = { id: Date.now() + file.name, element: img };
                     images.push(imageData);
                     addThumbnailToGallery(imageData);
                     if (!selectedImage) selectImage(imageData.id);
@@ -87,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(file);
         }
-        e.target.value = '';
+        e.target.value = ''; // Reset input
     }
 
     function selectImage(id) {
@@ -101,99 +79,115 @@ document.addEventListener('DOMContentLoaded', () => {
     function drawImageOnCanvas() {
         if (!selectedImage) return;
         canvas.width = selectedImage.element.naturalWidth;
-        canvas.height = selectedE/model
-Of course. Here is the code for the advanced version of the photo editing web app. This iteration incorporates a Material You-inspired design, preserves the original aspect ratio of images, allows for multiple photo and LUT management, and saves your imported LUTs so you don't have to reload them every session.
+        canvas.height = selectedImage.element.naturalHeight;
+        ctx.drawImage(selectedImage.element, 0, 0);
+        applySelectedLut();
+    }
 
-It also features a landing page for first-time users with instructions on how to add the app to their home screen for a more native-app experience, which includes hiding the browser's address bar.
+    function addThumbnailToGallery(imageData) {
+        const thumbContainer = document.createElement('div');
+        thumbContainer.className = 'thumbnail';
+        thumbContainer.dataset.id = imageData.id;
+        
+        const thumbImg = new Image();
+        thumbImg.src = imageData.element.src;
+        
+        thumbContainer.appendChild(thumbImg);
+        thumbContainer.onclick = () => selectImage(imageData.id);
+        photoGallery.appendChild(thumbContainer);
+    }
 
-### **index.html**
+    // --- 5. LUT HANDLING ---
+    function handleLutUpload(e) {
+        for (const file of e.target.files) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const lut = parseLut(event.target.result);
+                if (lut && !luts.some(l => l.name === file.name)) {
+                    const lutData = { name: file.name, ...lut };
+                    luts.push(lutData);
+                    saveLutToDB(lutData);
+                    addLutToGallery(lutData);
+                }
+            };
+            reader.readAsText(file);
+        }
+        e.target.value = '';
+    }
 
-This file now includes a landing page section and a more structured app layout with a gallery for multiple photos and a container for saved LUTs.
+    function selectLut(name) {
+        selectedLutName = name;
+        document.querySelectorAll('.lut-chip').forEach(c => c.classList.remove('selected'));
+        document.querySelector(`.lut-chip[data-lut-name='${CSS.escape(name)}']`).classList.add('selected');
+        drawImageOnCanvas(); // Redraw image with new/removed LUT
+    }
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#EADDFF">
-    <title>PixelPerfect</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-</head>
-<body>
+    function addLutToGallery(lut) {
+        const chip = document.createElement('div');
+        chip.className = 'lut-chip';
+        chip.textContent = lut.name === 'None' ? 'None' : lut.name.replace(/\.cube$/i, '');
+        chip.dataset.lutName = lut.name;
+        chip.onclick = () => selectLut(lut.name);
+        lutGallery.appendChild(chip);
+    }
 
-    <!-- Landing Page for First Time Users -->
-    <div id="landing-page">
-        <div class="landing-content">
-            <span class="material-symbols-outlined landing-icon">auto_awesome</span>
-            <h1>Welcome to PixelPerfect</h1>
-            <p>For the best experience, add this web app to your Home Screen to use it like a regular app.</p>
-            <div class="install-instructions">
-                <p><strong>To Install:</strong></p>
-                <ol>
-                    <li>Tap the <span class="material-symbols-outlined inline-icon">more_vert</span> or <span class="material-symbols-outlined inline-icon">ios_share</span> button in your browser.</li>
-                    <li>Select 'Add to Home Screen' or 'Install App'.</li>
-                </ol>
-            </div>
-            <button id="enter-app-button" class="fab extended">
-                <span class="material-symbols-outlined">arrow_forward</span>
-                Continue to App
-            </button>
-        </div>
-    </div>
+    function saveLutToDB(lutData) { if (db) db.transaction('luts', 'readwrite').objectStore('luts').put(lutData); }
+    
+    function loadLutsFromDB() {
+        addLutToGallery({ name: 'None' }); // Add default 'None' option first
+        selectLut('None');
+        if (!db) return;
+        const store = db.transaction('luts').objectStore('luts');
+        store.getAll().onsuccess = e => { luts = e.target.result; luts.forEach(addLutToGallery); };
+    }
 
-    <!-- Main App Interface -->
-    <div id="app" class="hidden">
-        <header class="app-bar">
-            <h1 class="app-title">PixelPerfect</h1>
-            <button id="install-button-main" class="icon-button" title="Install App">
-                <span class="material-symbols-outlined">download_for_offline</span>
-            </button>
-        </header>
+    function parseLut(str) {
+        const lines = str.split('\n').map(line => line.trim());
+        let sizeLine = lines.find(line => line.startsWith('LUT_3D_SIZE'));
+        if (!sizeLine) return null;
+        const size = parseInt(sizeLine.split(' ')[1]);
+        const data = lines.filter(line => line && !line.startsWith('#') && /^[0-9]/.test(line)).map(line => line.split(/\s+/).map(parseFloat));
+        if (data.length !== size * size * size) return null;
+        return { data, size };
+    }
 
-        <main class="main-content">
-            <div id="image-workspace">
-                <canvas id="canvas"></canvas>
-                <div id="placeholder">
-                    <span class="material-symbols-outlined placeholder-icon">image</span>
-                    <p>Add a photo to get started</p>
-                </div>
-            </div>
+    // --- 6. SEAMLESS LUT APPLICATION (Trilinear Interpolation) ---
+    function applySelectedLut() {
+        const lut = luts.find(l => l.name === selectedLutName);
+        if (!lut || !lut.data || !selectedImage) return;
 
-            <div class="gallery-container">
-                <div class="gallery-actions">
-                    <label for="image-upload" class="fab">
-                        <span class="material-symbols-outlined">add_photo_alternate</span>
-                    </label>
-                    <span>Photos</span>
-                </div>
-                <div id="photo-gallery" class="gallery">
-                    <!-- Thumbnails will be added here -->
-                </div>
-            </div>
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const pixels = imageData.data;
+        const { data: lutData, size } = lut;
 
-            <div class="gallery-container">
-                 <div class="gallery-actions">
-                    <label for="lut-upload" class="fab">
-                        <span class="material-symbols-outlined">style</span>
-                    </label>
-                    <span>LUTs</span>
-                </div>
-                <div id="lut-gallery" class="gallery">
-                    <!-- LUTs will be loaded here -->
-                </div>
-            </div>
-        </main>
+        for (let i = 0; i < pixels.length; i += 4) {
+            const r = pixels[i], g = pixels[i + 1], b = pixels[i + 2];
+            const newColor = trilinearInterpolate(r / 255, g / 255, b / 255, size, lutData);
+            pixels[i] = newColor[0] * 255;
+            pixels[i + 1] = newColor[1] * 255;
+            pixels[i + 2] = newColor[2] * 255;
+        }
+        ctx.putImageData(imageData, 0, 0);
+    }
 
-        <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
-        <input type="file" id="lut-upload" accept=".cube" multiple style="display: none;">
-    </div>
+    function trilinearInterpolate(r, g, b, size, lutData) {
+        const p = [r * (size - 1), g * (size - 1), b * (size - 1)];
+        const i = [Math.floor(p[0]), Math.floor(p[1]), Math.floor(p[2])];
+        const f = [p[0] - i[0], p[1] - i[1], p[2] - i[2]];
 
-    <script src="app.js"></script>
-</body>
-</html>
+        const c = (x, y, z) => lutData[Math.min(i[2] + z, size - 1) * size * size + Math.min(i[1] + y, size - 1) * size + Math.min(i[0] + x, size - 1)];
+
+        const c00 = c(0,0,0).map((val, idx) => val * (1 - f[0]) + c(1,0,0)[idx] * f[0]);
+        const c01 = c(0,0,1).map((val, idx) => val * (1 - f[0]) + c(1,0,1)[idx] * f[0]);
+        const c10 = c(0,1,0).map((val, idx) => val * (1 - f[0]) + c(1,1,0)[idx] * f[0]);
+        const c11 = c(0,1,1).map((val, idx) => val * (1 - f[0]) + c(1,1,1)[idx] * f[0]);
+
+        const c0 = c00.map((val, idx) => val * (1 - f[1]) + c10[idx] * f[1]);
+        const c1 = c01.map((val, idx) => val * (1 - f[1]) + c11[idx] * f[1]);
+
+        return c0.map((val, idx) => val * (1 - f[2]) + c1[idx] * f[2]);
+    }
+
+    // --- GO! ---
+    init();
+});

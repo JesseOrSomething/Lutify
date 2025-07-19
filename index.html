@@ -3,13 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#EADDFF">
+    
+    <!-- This tells the browser bar what color to be in light/dark mode -->
+    <meta name="theme-color" content="#EADDFF" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#21005D" media="(prefers-color-scheme: dark)">
+
     <title>PixelPerfect</title>
-    <!-- Google Fonts for Material You look and feel -->
+    
+    <!-- Google Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
     <!-- App Stylesheet and Manifest -->
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json">
@@ -17,15 +23,15 @@
 <body>
 
     <!-- Landing Page for First-Time Users -->
-    <div id="landing-page" class="hidden">
+    <div id="landing-page">
         <div class="landing-content">
             <span class="material-symbols-outlined landing-icon">auto_awesome</span>
             <h1>Welcome to PixelPerfect</h1>
-            <p>For a fullscreen, native app experience, add this app to your Home Screen.</p>
+            <p>For a fullscreen, native app experience, please add this app to your Home Screen.</p>
             <div class="install-instructions">
                 <p><strong>How to Install:</strong></p>
                 <ol>
-                    <li>Tap the <span class="material-symbols-outlined inline-icon">more_vert</span> (Chrome) or <span class="material-symbols-outlined inline-icon">ios_share</span> (Safari) button.</li>
+                    <li>Tap the <span class="material-symbols-outlined inline-icon">more_vert</span> or <span class="material-symbols-outlined inline-icon">ios_share</span> button in your browser.</li>
                     <li>Select 'Add to Home Screen' or 'Install App'.</li>
                 </ol>
             </div>
@@ -46,7 +52,6 @@
         </header>
 
         <main class="main-content">
-            <!-- Workspace for editing the selected image -->
             <div id="image-workspace">
                 <canvas id="canvas"></canvas>
                 <div id="placeholder">
@@ -55,7 +60,6 @@
                 </div>
             </div>
 
-            <!-- Redesigned photo gallery -->
             <div class="gallery-container">
                 <div class="gallery-actions">
                     <label for="image-upload" class="fab" title="Add Photos">
@@ -64,11 +68,10 @@
                     <span class="gallery-title">Your Photos</span>
                 </div>
                 <div id="photo-gallery" class="grid-gallery">
-                    <!-- Photo thumbnails will be injected here -->
+                    <!-- Photo thumbnails are added here by JS -->
                 </div>
             </div>
 
-            <!-- Redesigned LUT gallery -->
             <div class="gallery-container">
                  <div class="gallery-actions">
                     <label for="lut-upload" class="fab" title="Import LUTs">
@@ -77,12 +80,11 @@
                     <span class="gallery-title">Filters (LUTs)</span>
                 </div>
                 <div id="lut-gallery" class="grid-gallery">
-                    <!-- LUT chips will be injected here -->
+                    <!-- LUT chips are added here by JS -->
                 </div>
             </div>
         </main>
 
-        <!-- Hidden file inputs -->
         <input type="file" id="image-upload" accept="image/*" multiple style="display: none;">
         <input type="file" id="lut-upload" accept=".cube" multiple style="display: none;">
     </div>

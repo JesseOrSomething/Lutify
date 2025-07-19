@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- DOM Elements ---
     const landingPage = document.getElementById('landing-page');
     const appPage = document.getElementById('app');
     const enterAppButton = document.getElementById('enter-app-button');
@@ -62,25 +61,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const lutSelect = document.getElementById('lut-select');
     const appTitleText = document.getElementById('app-title-text');
 
-    // --- App State ---
-    let db, deferredPrompt, images = {}, luts = {};
+    let db, deferredPrompt, images = [], luts = [];
 
     function init() {
         if (window.matchMedia('(display-mode: standalone)').matches) {
             appTitleText.textContent = "PixelPerfect (Fullscreen)";
         } else {
-            appTitleText.textContent = "PixelPerfect (Browser)";
-            document.body.classList.add('in-browser');
+            appTitleText.textContent = "PixelPerfect (In Browser)";
         }
 
-        if (localStorage.getItem('hasVisitedApp_v2')) showApp(); else showLandingPage();
+        if (localStorage.getItem('hasVisitedApp_v3')) showApp(); else showLandingPage();
         webGLHelper.init(canvas);
         initDB();
         setupEventListeners();
     }
 
-    const showLandingPage = () => { landingPage.style.display = 'flex'; appPage.classList.add('hidden'); };
-    const showApp = () => { landingPage.style.display = 'none'; appPage.classList.remove('hidden'); localStorage.setItem('hasVisitedApp_v2', 'true'); };
+    const showLandingPage = () => { landingPage.classList.add('active'); appPage.classList.remove('active'); };
+    const showApp = () => { landingPage.classList.remove('active'); appPage.classList.add('active'); localStorage.setItem('hasVisitedApp_v3', 'true'); };
     
     window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installButton.style.display = 'flex'; });
     function initDB() { const req = indexedDB.open('PixelPerfectDB_v4', 1); req.onupgradeneeded = e => e.target.result.createObjectStore('luts', { keyPath: 'name' }); req.onsuccess = e => { db = e.target.result; loadLutsFromDB(); }; }
@@ -94,55 +91,42 @@ document.addEventListener('DOMContentLoaded', () => {
         lutSelect.addEventListener('change', () => drawCurrentState());
     }
 
-    function handleImageUpload(e) {
+    async function handleImageUpload(e) {
         if (e.target.files.length > 0) { placeholder.style.display = 'none'; canvas.style.display = 'block'; }
         
-        let firstNewImageId = null;
         for (const file of e.target.files) {
             const imageId = Date.now() + file.name;
-            if(images[imageId]) continue;
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            await img.decode();
             
-            if(!firstNewImageId) firstNewImageId = imageId;
-
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    images[imageId] = { name: file.name, element: img };
-                    addOptionToSelect(photoSelect, file.name, imageId);
-                    if (imageId === firstNewImageId) {
-                        photoSelect.value = imageId;
-                        drawCurrentState();
-                    }
-                };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+            const imageData = { id: imageId, name: file.name, element: img };
+            images.push(imageData);
+            addOptionToSelect(photoSelect, file.name, imageId);
         }
+        
+        photoSelect.value = images[images.length - 1].id; // Select the last image added
+        drawCurrentState();
         e.target.value = '';
     }
     
-    function handleLutUpload(e) {
-        let firstNewLutName = null;
+    async function handleLutUpload(e) {
         for (const file of e.target.files) {
-            if (luts[file.name]) continue;
-            if(!firstNewLutName) firstNewLutName = file.name;
-
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const lut = parseLut(event.target.result);
-                if (lut) {
-                    luts[file.name] = { ...lut, name: file.name };
-                    saveLutToDB(luts[file.name]);
-                    addOptionToSelect(lutSelect, file.name.replace(/\.cube$/i, ''), file.name);
-                    if(file.name === firstNewLutName) {
-                        lutSelect.value = file.name;
-                        drawCurrentState();
-                    }
-                }
-            };
-            reader.readAsText(file);
+            if (luts.some(lut => lut.name === file.name)) continue;
+            
+            const text = await file.text();
+            const lut = parseLut(text);
+            
+            if (lut) {
+                const lutData = { name: file.name, ...lut };
+                luts.push(lutData);
+                saveLutToDB(lutData);
+                addOptionToSelect(lutSelect, file.name.replace(/\.cube$/i, ''), file.name);
+            }
         }
+
+        lutSelect.value = luts[luts.length - 1].name; // Select the last LUT added
+        drawCurrentState();
         e.target.value = '';
     }
 
@@ -150,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedImageId = photoSelect.value;
         const selectedLutName = lutSelect.value;
         
-        const image = images[selectedImageId];
-        const lut = luts[selectedLutName] || { data: null, size: 0 };
+        const image = images.find(img => img.id == selectedImageId);
+        const lut = luts.find(l => l.name === selectedLutName) || { data: null, size: 0 };
         
         if (!image) return;
 
@@ -175,12 +159,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function loadLutsFromDB() {
         addOptionToSelect(lutSelect, 'None', 'None');
+        luts.push({name: 'None', data: null, size: 0}); // Add default LUT
         if (!db) return;
         const store = db.transaction('luts').objectStore('luts');
         store.getAll().onsuccess = e => {
             e.target.result.forEach(lut => {
-                luts[lut.name] = lut;
-                addOptionToSelect(lutSelect, lut.name.replace(/\.cube$/i, ''), lut.name);
+                if (!luts.some(l => l.name === lut.name)) {
+                    luts.push(lut);
+                    addOptionToSelect(lutSelect, lut.name.replace(/\.cube$/i, ''), lut.name);
+                }
             });
         };
     }

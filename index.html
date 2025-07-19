@@ -16,17 +16,13 @@
 <body>
 
     <!-- Landing Page for First-Time Users -->
-    <div id="landing-page" style="display: none;">
+    <div id="landing-page">
         <div class="landing-content">
             <span class="material-symbols-outlined landing-icon">auto_awesome</span>
             <h1>Welcome to PixelPerfect</h1>
-            <p>For a fullscreen experience, add this app to your Home Screen.</p>
+            <p>For a fullscreen experience, please install this app to your Home Screen.</p>
             <div class="install-instructions">
-                <p><strong>To Install:</strong></p>
-                <ol>
-                    <li>Tap your browser's menu (<span class="material-symbols-outlined inline-icon">more_vert</span> or <span class="material-symbols-outlined inline-icon">ios_share</span>).</li>
-                    <li>Select 'Add to Home Screen' or 'Install App'.</li>
-                </ol>
+                <p><strong>To Install:</strong> Tap <span class="material-symbols-outlined inline-icon">more_vert</span> then 'Install App'.</p>
             </div>
             <button id="enter-app-button" class="action-button large">Continue to App</button>
         </div>
@@ -36,14 +32,13 @@
     <div id="app" class="hidden">
         <header class="app-bar">
             <h1 class="app-title">PixelPerfect</h1>
-            <button id="install-button-main" class="icon-button" title="Install App">
+            <button id="install-button-main" class="icon-button-header" title="Install App">
                 <span class="material-symbols-outlined">download_for_offline</span>
             </button>
         </header>
 
         <main class="main-content">
             <div id="image-workspace">
-                <!-- The canvas is now controlled by WebGL -->
                 <canvas id="canvas"></canvas>
                 <div id="placeholder">
                     <span class="material-symbols-outlined placeholder-icon">add_photo_alternate</span>
@@ -51,21 +46,22 @@
                 </div>
             </div>
 
-            <!-- Simplified Controls with Dropdown Menus -->
             <div class="controls-container">
                 <div class="control-group">
-                    <label for="photo-select" class="control-label">Photo</label>
+                    <label for="image-upload" class="icon-button" title="Add Photo">
+                         <span class="material-symbols-outlined">add_a_photo</span>
+                    </label>
                     <div class="select-wrapper">
                          <select id="photo-select" class="control-select"></select>
                     </div>
-                    <label for="image-upload" class="action-button">Add</label>
                 </div>
                 <div class="control-group">
-                    <label for="lut-select" class="control-label">Filter</label>
+                     <label for="lut-upload" class="icon-button" title="Import LUT">
+                        <span class="material-symbols-outlined">style</span>
+                    </label>
                      <div class="select-wrapper">
                         <select id="lut-select" class="control-select"></select>
                     </div>
-                    <label for="lut-upload" class="action-button">Import</label>
                 </div>
             </div>
         </main>

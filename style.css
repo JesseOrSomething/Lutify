@@ -1,108 +1,174 @@
 :root {
-    --primary-color: #4285F4;
-    --primary-dark-color: #3367D6;
-    --accent-color: #FFFFFF;
-    --text-color: #212121;
-    --background-color: #F5F5F5;
+    /* Material You Color Palette */
+    --md-sys-color-primary: #6750A4;
+    --md-sys-color-on-primary: #FFFFFF;
+    --md-sys-color-primary-container: #EADDFF;
+    --md-sys-color-on-primary-container: #21005D;
+    --md-sys-color-secondary-container: #E8DEF8;
+    --md-sys-color-on-secondary-container: #1D192B;
+    --md-sys-color-surface: #FFFBFE;
+    --md-sys-color-on-surface: #1C1B1F;
+    --md-sys-color-on-surface-variant: #49454F;
+    --md-sys-color-outline: #79747E;
+    --md-ref-typeface-brand: 'Google Sans', 'Roboto', sans-serif;
 }
 
 body {
     margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    font-family: var(--md-ref-typeface-brand);
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    -webkit-tap-highlight-color: transparent; /* Disable tap highlight on mobile */
 }
 
-.install-prompt {
-    display: none;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #212121;
-    color: white;
-    padding: 16px;
-    box-shadow: 0 -2px 5px rgba(0,0,0,0.2);
-    z-index: 1000;
-}
+.hidden { display: none !important; }
 
-.install-prompt-content {
+/* Landing Page Styles */
+#landing-page {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
+    text-align: center;
+    padding: 24px;
+    height: 100vh;
+    box-sizing: border-box;
 }
+.landing-content { max-width: 400px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.landing-icon { font-size: 48px; color: var(--md-sys-color-primary); }
+.landing-content h1 { margin: 0; }
+.install-instructions {
+    text-align: left;
+    background-color: var(--md-sys-color-secondary-container);
+    padding: 12px 16px;
+    border-radius: 16px;
+    margin: 16px 0;
+}
+.install-instructions ol { padding-left: 20px; margin: 0; }
+.inline-icon { vertical-align: bottom; font-size: 1.2em; }
 
+/* Main App Layout */
+#app { display: flex; flex-direction: column; height: 100vh; }
 .app-bar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding: 16px;
-    background-color: var(--primary-color);
-    color: var(--accent-color);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    background-color: var(--md-sys-color-surface);
+    flex-shrink: 0;
 }
+.app-title { font-size: 22px; margin: 0; color: var(--md-sys-color-primary); }
+.main-content { padding: 0 16px 16px; overflow-y: auto; flex-grow: 1; }
 
-.app-bar .material-icons {
-    margin-right: 16px;
-}
-
-.app-title {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.main-content {
-    padding: 16px;
-}
-
-.image-container {
+/* Image Workspace */
+#image-workspace {
     width: 100%;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
+    background-color: #ECEFF1;
+    border-radius: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
     position: relative;
-    padding-bottom: 100%; /* 1:1 Aspect Ratio */
-    background-color: #E0E0E0;
-    border-radius: 8px;
     overflow: hidden;
 }
-
-.image-container img, .image-container canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.button-container {
-    display: flex;
-    justify-content: space-around;
-}
-
-.button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    background-color: var(--primary-color);
-    color: var(--accent-color);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    text-transform: uppercase;
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
-    transition: box-shadow 0.2s;
-}
-
-.button:hover {
-    box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.2);
-}
-
-.button .material-icons {
-    margin-right: 8px;
-}
-
-input[type="file"] {
+#canvas {
+    max-width: 100%;
+    max-height: 60vh;
+    object-fit: contain; /* This is key for maintaining aspect ratio */
     display: none;
 }
+#placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--md-sys-color-on-surface-variant);
+}
+.placeholder-icon { font-size: 48px; }
+
+/* Galleries (Photos and LUTs) */
+.gallery-container { margin-bottom: 24px; }
+.gallery-actions { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.gallery-title { font-size: 16px; font-weight: 500; color: var(--md-sys-color-on-surface-variant); }
+.gallery {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 12px; /* Makes room for scrollbar without hiding content */
+    scrollbar-width: thin;
+}
+/* Scrollbar styling for a cleaner look */
+.gallery::-webkit-scrollbar { height: 6px; }
+.gallery::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+/* Thumbnails and LUT Chips */
+.thumbnail, .lut-chip {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+.thumbnail {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 16px;
+}
+.thumbnail.selected {
+    border-color: var(--md-sys-color-primary);
+    transform: scale(1.05);
+}
+.lut-chip {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-weight: 500;
+}
+.lut-chip.selected {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+/* Material You Components */
+.fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s;
+}
+.fab:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.15); }
+.fab.extended {
+    width: auto;
+    padding: 0 20px;
+    gap: 12px;
+    height: 56px;
+    font-size: 16px;
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: none; /* Hidden by default, shown by JS if install is available */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--md-sys-color-on-surface-variant);
+}
+.icon-button:hover { background-color: rgba(0,0,0,0.05); }

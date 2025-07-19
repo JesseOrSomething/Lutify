@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#4285F4">
+    <title>Photo Editor</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+    <div id="install-prompt" class="install-prompt">
+        <div class="install-prompt-content">
+            <p>Add this app to your home screen for a better experience.</p>
+            <button id="install-button" class="button">Install</button>
+            <button id="close-install-prompt" class="button-flat">Later</button>
+        </div>
+    </div>
+
+    <div class="app-bar">
+        <i class="material-icons">photo_filter</i>
+        <h1 class="app-title">Photo Editor</h1>
+    </div>
+
+    <main class="main-content">
+        <div id="image-container" class="image-container">
+            <img id="image-preview" src="" alt="Your selected image">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <div class="button-container">
+            <label for="image-upload" class="button">
+                <i class="material-icons">add_photo_alternate</i>
+                Add Photo
+            </label>
+            <input type="file" id="image-upload" accept="image/*">
+
+            <label for="lut-upload" class="button">
+                <i class="material-icons">style</i>
+                Import LUT
+            </label>
+            <input type="file" id="lut-upload" accept=".cube">
+        </div>
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

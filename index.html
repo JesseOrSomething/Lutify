@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#EADDFF" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#21005D" media="(prefers-color-scheme: dark)">
+    <meta name="theme-color" content="#362957" media="(prefers-color-scheme: dark)">
     <title>PixelPerfect</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,13 +16,13 @@
 <body>
 
     <!-- Landing Page for First-Time Users -->
-    <div id="landing-page">
+    <div id="landing-page" style="display: none;">
         <div class="landing-content">
             <span class="material-symbols-outlined landing-icon">auto_awesome</span>
             <h1>Welcome to PixelPerfect</h1>
-            <p>For a fullscreen, native app experience, please add this app to your Home Screen.</p>
+            <p>For a fullscreen experience, add this app to your Home Screen.</p>
             <div class="install-instructions">
-                <p><strong>How to Install:</strong></p>
+                <p><strong>To Install:</strong></p>
                 <ol>
                     <li>Tap your browser's menu (<span class="material-symbols-outlined inline-icon">more_vert</span> or <span class="material-symbols-outlined inline-icon">ios_share</span>).</li>
                     <li>Select 'Add to Home Screen' or 'Install App'.</li>
@@ -43,6 +43,7 @@
 
         <main class="main-content">
             <div id="image-workspace">
+                <!-- The canvas is now controlled by WebGL -->
                 <canvas id="canvas"></canvas>
                 <div id="placeholder">
                     <span class="material-symbols-outlined placeholder-icon">add_photo_alternate</span>
@@ -50,22 +51,22 @@
                 </div>
             </div>
 
-            <!-- Simplified Photos Section -->
-            <div class="gallery-container">
-                <div class="gallery-header">
-                    <span class="gallery-title">Your Photos</span>
+            <!-- Simplified Controls with Dropdown Menus -->
+            <div class="controls-container">
+                <div class="control-group">
+                    <label for="photo-select" class="control-label">Photo</label>
+                    <div class="select-wrapper">
+                         <select id="photo-select" class="control-select"></select>
+                    </div>
                     <label for="image-upload" class="action-button">Add</label>
                 </div>
-                <div id="photo-gallery" class="grid-gallery"></div>
-            </div>
-
-            <!-- Simplified Filters Section -->
-            <div class="gallery-container">
-                <div class="gallery-header">
-                    <span class="gallery-title">Filters (LUTs)</span>
+                <div class="control-group">
+                    <label for="lut-select" class="control-label">Filter</label>
+                     <div class="select-wrapper">
+                        <select id="lut-select" class="control-select"></select>
+                    </div>
                     <label for="lut-upload" class="action-button">Import</label>
                 </div>
-                <div id="lut-gallery" class="grid-gallery"></div>
             </div>
         </main>
 

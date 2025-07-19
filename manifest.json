@@ -1,20 +1,21 @@
 {
-    "short_name": "Photo Editor",
-    "name": "Simple Photo Editor",
+    "short_name": "PixelPerfect",
+    "name": "PixelPerfect Photo Editor",
+    "description": "A simple photo editor to apply LUTs to your images.",
     "icons": [
         {
-            "src": "images/icon-192x192.png",
+            "src": "images/icon-192.png",
             "type": "image/png",
             "sizes": "192x192"
         },
         {
-            "src": "images/icon-512x512.png",
+            "src": "images/icon-512.png",
             "type": "image/png",
             "sizes": "512x512"
         }
     ],
     "start_url": ".",
     "display": "standalone",
-    "theme_color": "#4285F4",
-    "background_color": "#F5F5F5"
+    "background_color": "#FFFBFE",
+    "theme_color": "#EADDFF"
 }
